@@ -7,36 +7,41 @@ let
 lua51 = pkgs.lua51Packages.lua;
 
 dotnet = with pkgs; [dotnet-sdk dotnet-runtime];
+monoBuild = with pkgs; [mono msbuild];
 
 # platform segregation
 isLinux  = elem pkgs.system ["x86_64-linux"   "aarch64-linux"]; 
 isDarwin = elem pkgs.system [ "x86_64-darwin" "aarch64-darwin"];
 
-baseNativeBuildInputs = with pkgs; [ toybox rsync ];
-linuxNativeBuildInputs = with pkgs; [mono gnumake openal SDL2 openal libGL freetype lua51];
-darwinNativeBuildInputs = with pkgs; [] ++ dotnet;
+baseNativeBuildInputs = with pkgs; [ toybox rsync  gnumake ]; # openal SDL2 freetype lua51];
+linuxNativeBuildInputs =[];
+darwinNativeBuildInputs = monoBuild;
 
 condList = c : l : if c then l else [];
 
-baseMakeFlags = [ "TARGETPLATFORM=unix-generic" ];
+baseMakeFlags = ["TARGETPLATFORM=unix-generic"];
 linuxMakeFlags = ["RUNTIME=mono"];
-darwinMakeFlags = [];
+darwinMakeFlags = ["RUNTIME=mono"];
 
 
 in
-pkgs.buildDotnetModule {
+pkgs.stdenv.mkDerivation {
   inherit pname version src;
 
-  # build inputs
-  nativeBuildInputs = baseNativeBuildInputs 
-  ++ (condList isLinux linuxNativeBuildInputs) 
-  ++ (condList isDarwin darwinNativeBuildInputs);
+  # native build inputs (used for compile time)
+  nativeBuildInputs = baseNativeBuildInputs ++
+  condList isLinux linuxNativeBuildInputs ++ 
+  condList isDarwin darwinNativeBuildInputs;
 
   # try to make use of mono instead of dotnet.
   makeFlags = baseMakeFlags ++ (condList isLinux linuxMakeFlags) ++ (condList isDarwin darwinMakeFlags);
 
   # quite unecessary : we should try to avoid copying useless files
-  unpackPhase = '' ${pkgs.rsync}/bin/rsync -a $src/* ./'';
+  #unpackPhase = ''
+  #fsefsrgrs
+  #${pkgs.rsync}/bin/rsync -a $src/* ./
+  #kfjesf;sj
+  #'';
 
   installPhase = ''
     ls -la
