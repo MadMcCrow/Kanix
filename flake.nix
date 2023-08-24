@@ -5,12 +5,12 @@
 
   # flake inputs :
   inputs = {
-    # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Nixpkgs flake input
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     #Open-RA
     openRA = {
-      url = "github:OpenRA/OpenRA";
+      url = "github:OpenRA/OpenRA/bleed";
       flake = false;
     };
 
@@ -36,14 +36,11 @@
   outputs = { self, nixpkgs, ... } @inputs :
   let 
 
-      # we try to support every system
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+    forAllSystems = let 
+      systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
+    in f : nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-      forAllSystems = function:
-        nixpkgs.lib.genAttrs systems
-        (system: function nixpkgs.legacyPackages.${system});
-
-      ra-engine = pkgs : import ./ra-engine {inherit pkgs; src = inputs.openRA;};
+    ra-engine = pkgs : import ./ra-engine.nix {inherit pkgs; src = inputs.openRA;};
   in
   {
        # pre-defined godot engine 

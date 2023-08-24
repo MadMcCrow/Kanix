@@ -34,16 +34,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1692447944,
-        "narHash": "sha256-fkJGNjEmTPvqBs215EQU4r9ivecV5Qge5cF/QDLVn3U=",
+        "lastModified": 1692742407,
+        "narHash": "sha256-faLzZ2u3Wki8h9ykEfzQr19B464eyADP3Ux7A/vjKIY=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "d680ded26da5cf104dd2735a51e88d2d8f487b4d",
+        "rev": "a2eca347ae1e542af3f818274c38305c1e00604c",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -51,15 +51,16 @@
     "openRA": {
       "flake": false,
       "locked": {
-        "lastModified": 1692556887,
-        "narHash": "sha256-ihVQixZfj5+hvqMG2BtlAMx6lTPaPcpgotpXBhXF5lg=",
+        "lastModified": 1692813380,
+        "narHash": "sha256-KPS+GAWThyujMjPn/E8eHmMbZq7jefqhIkYxtCaKr5k=",
         "owner": "OpenRA",
         "repo": "OpenRA",
-        "rev": "93a97d5d6f2793c695ab8ccf8256ee98ee59cb9a",
+        "rev": "f69e6289b538742f4622d6b1bc483f64cb683d19",
         "type": "github"
       },
       "original": {
         "owner": "OpenRA",
+        "ref": "bleed",
         "repo": "OpenRA",
         "type": "github"
       }
