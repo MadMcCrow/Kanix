@@ -34,13 +34,29 @@
   };
 
   outputs = { self, nixpkgs, ... } @inputs :
+  with builtins;
+  with (nixpkgs) lib;
   let 
 
-    forAllSystems = let 
-      systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-    in f : nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+  systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
+  forAllSystems = f : nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+
+  fetchGitHubRelease = { owner, repo, version, file, sha256 } : fetchurl {
+    url = "https://github.com/${owner}/${repo}/releases/download/${version}/${file}";
+    inherit sha256;
+   };
+
+  # TODO : allow other flakes to build the version they want
+  openRA-Sources = fetchGitHubRelease rec {
+      owner = "openRA";
+      repo = "OpenRA";
+      version = "release-20230225";
+      file = "${version}-source.tar.gz";
+      sha = "";
+    };
 
     ra-engine = pkgs : import ./ra-engine.nix {inherit pkgs; src = inputs.openRA;};
+
   in
   {
        # pre-defined godot engine 
