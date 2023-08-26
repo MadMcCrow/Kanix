@@ -19,7 +19,7 @@ rs ="${pkgs.rsync}/bin/rsync";
 
 
 in
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation {
   inherit pname version src;
 
   # native build inputs (used for compile time)
@@ -34,7 +34,6 @@ pkgs.stdenv.mkDerivation rec {
     ${rs}  -a $src/* ./
   '';
 
-
   # in order :
   # fix for read only
   # fix for version
@@ -45,8 +44,8 @@ pkgs.stdenv.mkDerivation rec {
   patchPhase = ''
     chmod +w ./ -R
     echo "${version}" > ./VERSION
-    substituteInPlace configure-system-libraries.sh --replace '/usr/local/lib' '/usr/local/lib ${libPaths}'
-    substituteInPlace configure-system-libraries.sh --replace '/opt/homebrew/lib' '/opt/homebrew/lib ${libPaths}'
+    substituteInPlace configure-system-libraries.sh --replace '/usr/local/lib' '${libPaths}'
+    substituteInPlace configure-system-libraries.sh --replace '/opt/homebrew/lib' '${libPaths}'
     substituteInPlace configure-system-libraries.sh --replace 'liblua5.1.dylib' 'liblua.5.1.dylib'
     substituteInPlace Makefile --replace '-p:TargetPlatform=$(TARGETPLATFORM)' '-p:TargetPlatform=$(TARGETPLATFORM) -p:Version=0.0.0.0'
   '';
@@ -56,5 +55,9 @@ pkgs.stdenv.mkDerivation rec {
     ls -la > files.txt
     ${rs} -a bin $out/bin
     ${rs} -a *.sh $out
+  '';
+
+  postInstallFixup = ''
+  echo "been there !!!"
   '';
 }
